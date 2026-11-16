@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <meta name="referrer" content="no-referrer">
+  <title>Conectar Instagram · Curiocity</title>
+  <link rel="icon" href="../favicon.png">
+  <link rel="stylesheet" href="../estilo.css">
+</head>
+<body>
+<main>
+  <a class="marca" href="../"><header class="marca"><img src="../logo.png" alt=""><span>curiocity</span></header></a>
+  <h1 id="titulo">Conectar Instagram</h1>
+  <p id="texto">Copia esta dirección y pégala en el terminal.</p>
+  <textarea id="url" readonly></textarea>
+  <button id="copiar" type="button">Copiar</button>
+  <footer><a href="../">Inicio</a><a href="../privacidad.html">Privacidad</a></footer>
+</main>
+<script>
+  // Página de vuelta del login de Meta (Instagram): el publicador (en el Mac) necesita la URL completa con ?code=…&state=…
+  const q = new URLSearchParams(location.search);
+  const caja = document.getElementById("url");
+  caja.value = location.href;
+  if (q.get("error")) {
+    document.getElementById("titulo").textContent = "Instagram no dio permiso";
+    document.getElementById("texto").textContent = q.get("error_description") || q.get("error_reason") || q.get("error");
+  } else if (!q.get("code")) {
+    document.getElementById("texto").textContent = "Esta página solo sirve para volver del inicio de sesión de Instagram.";
+    caja.hidden = true;
+    document.getElementById("copiar").hidden = true;
+  }
+  document.getElementById("copiar").onclick = async () => {
+    try { await navigator.clipboard.writeText(caja.value); } catch { caja.select(); document.execCommand("copy"); }
+    document.getElementById("copiar").textContent = "Copiado ✓";
+  };
+</script>
+</body>
+</html>
